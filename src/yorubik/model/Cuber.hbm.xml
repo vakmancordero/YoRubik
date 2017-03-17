@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 17-mar-2017 3:58:01 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="yorubik.model.Cuber" table="cubers">
+        <id name="id" type="int" access="field">
+            <column name="id" />
+            <generator class="native"></generator>
+        </id>
+        <property name="birthday" type="java.util.Date" access="field">
+            <column name="born_date" />
+        </property>
+        <property name="name" type="java.lang.String" access="field">
+            <column name="name" />
+        </property>
+        <property name="template" type="[B" access="field">
+            <column name="digit" />
+        </property>
+    </class>
+</hibernate-mapping>

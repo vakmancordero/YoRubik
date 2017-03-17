@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 17-mar-2017 3:58:01 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="tributal_yorubik" name="yorubik.model.Time" optimistic-lock="version" table="times">
+    <id name="id" type="java.lang.Integer">
+      <column name="id"/>
+      <generator class="identity"/>
+    </id>
+    <property name="time" type="double">
+      <column name="time" not-null="true" precision="22" scale="0"/>
+    </property>
+    <property name="reason" type="string">
+      <column name="reason" not-null="true"/>
+    </property>
+    <property name="dnf" type="double">
+      <column name="dnf" not-null="true" precision="22" scale="0"/>
+    </property>
+    <property name="plus" type="double">
+      <column name="plus" not-null="true" precision="22" scale="0"/>
+    </property>
+    <property name="iteration" type="int">
+      <column name="iteration" not-null="true"/>
+    </property>
+    <property name="roundId" type="int">
+      <column name="round_id" not-null="true"/>
+    </property>
+    <property name="createdAt" type="timestamp">
+      <column length="19" name="created_at"/>
+    </property>
+    <property name="updatedAt" type="timestamp">
+      <column length="19" name="updated_at"/>
+    </property>
+  </class>
+</hibernate-mapping>
