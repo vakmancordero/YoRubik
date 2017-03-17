@@ -2,30 +2,42 @@ package yorubik.times.round;
 
 import com.digitalpersona.onetouch.DPFPSample;
 import com.digitalpersona.onetouch.DPFPTemplate;
+
 import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Optional;
 import java.util.ResourceBundle;
+
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+
+import yorubik.model.Tournament;
+import yorubik.model.Round;
 import yorubik.model.Category;
 import yorubik.model.Cuber;
 import yorubik.model.Judge;
-import yorubik.model.Round;
 import yorubik.model.Time;
-import yorubik.model.Tournament;
+
 import yorubik.reader.Reader;
 import yorubik.util.Rubik;
 import yorubik.util.ValidatorUtil;
+
+import static yorubik.YoRubikController.rubik;
 
 /**
  *
@@ -37,7 +49,7 @@ public class RoundController implements Initializable {
     private TextField time1TF, time2TF, time3TF, time4TF, time5TF;
     
     @FXML
-    private Label judgeLabel, cuberLabel;
+    private Label judgeLabel, cuberLabel, dnfLabel;
     
     @FXML
     private Label categoryLabel, tournamentLabel;
@@ -52,13 +64,7 @@ public class RoundController implements Initializable {
     private TextField timePlusTF1, timePlusTF2, timePlusTF3, timePlusTF4, timePlusTF5;
     
     public static Reader readerEvent;
-    
     public static Thread readerThread;
-    
-    private Rubik rubik;
-    
-    private String findBy = "cuber";
-    private Alert alert;
     
     private ValidatorUtil validatorUtil;
     
@@ -67,10 +73,26 @@ public class RoundController implements Initializable {
     private Cuber cuber;
     private Judge judge;
     
+    private String findBy = "cuber";
+    private Alert alert;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-        this.rubik = new Rubik();
+        try {
+            
+            if (rubik == null) {
+                rubik = new Rubik();
+            }
+            
+        } catch (Exception ex) {
+            
+            new Alert(
+                    Alert.AlertType.ERROR,
+                    "No hay internet :("
+            ).show();
+            
+        }
         
         this.initAlert();
         this.initValidator();
@@ -102,38 +124,56 @@ public class RoundController implements Initializable {
         
         this.tournamentLabel.setText(this.tornament.getName());
         this.categoryLabel.setText(this.category.getName());
-        
+        this.dnfLabel.setText(Double.toString(this.category.getDnf()));
     }
     
     @FXML
     private void setCuber() {
         
-        findBy = "cuber";
-        
-        this.alert.show();
-        
         readerEvent.setIsRunning(true);
         readerThread = new Thread(readerEvent);
-
         readerThread.start();
+        
+        this.findBy = "cuber";
+        Optional<ButtonType> option = this.alert.showAndWait();
+        
+        if (option.isPresent()) {
+            
+            if (option.get() == ButtonType.OK) {
+            
+                readerEvent.setIsRunning(false);
+                readerThread.interrupt();
+
+            }
+            
+        }
+        
     }
     
     @FXML
     private void setJudge() {
         
-        findBy = "judge";
-        
-        this.alert.show();
-        
         readerEvent.setIsRunning(true);
         readerThread = new Thread(readerEvent);
-
         readerThread.start();
         
+        this.findBy = "judge";
+        Optional<ButtonType> option = this.alert.showAndWait();
+        
+        if (option.isPresent()) {
+            
+            if (option.get() == ButtonType.OK) {
+            
+                readerEvent.setIsRunning(false);
+                readerThread.interrupt();
+
+            }
+            
+        }
     }
     
     @FXML
-    private void save() {
+    private void save(ActionEvent event) {
         
         if (this.cuber != null) {
             
@@ -141,58 +181,110 @@ public class RoundController implements Initializable {
                 
                 if (this.validatorUtil.validateFields()) {
                     
-                    Round round = new Round(
-                            this.tornament.getId(), this.judge.getId(), 
-                            this.cuber.getId(), this.category.getId()
-                    );
-                    
-                    this.rubik.save(round);
-                    
-                    int roundId = this.rubik.getLastId("rounds");
-                    
-                    List<Time> timeList = new ArrayList<>();
-                    
-                    double dnf = this.category.getDnf();
-                    
-                    timeList.add(getTime(dnf1, plus1, time1TF, timePlusTF1, roundId, 1, dnf));
-                    timeList.add(getTime(dnf2, plus2, time2TF, timePlusTF2, roundId, 2, dnf));
-                    timeList.add(getTime(dnf3, plus3, time3TF, timePlusTF3, roundId, 3, dnf));
-                    timeList.add(getTime(dnf4, plus4, time4TF, timePlusTF4, roundId, 4, dnf));
-                    timeList.add(getTime(dnf5, plus5, time5TF, timePlusTF5, roundId, 5, dnf));
-                    
-                    double average = this.generarAVG(timeList);
-                    double pb = this.getPb(timeList);
-                    
-                    round.setAvg(average);
-                    round.setPb(pb);
-                    
-                    this.rubik.update(round);
-                    
-                    System.out.println("average = " + average);
+                    if (this.validatePlus()) {
+                        
+                        Round round = new Round(
+                                this.tornament.getId(), this.judge.getId(),
+                                this.cuber.getId(), this.category.getId()
+                        );
+                        
+                        rubik.save(round);
+                        
+                        int roundId = rubik.getLastId("rounds");
+                        
+                        List<Time> timeList = new ArrayList<>();
+                        
+                        double dnf = this.category.getDnf();
+                        
+                        timeList.add(getTime(dnf1, plus1, time1TF, timePlusTF1, roundId, 1, dnf));
+                        timeList.add(getTime(dnf2, plus2, time2TF, timePlusTF2, roundId, 2, dnf));
+                        timeList.add(getTime(dnf3, plus3, time3TF, timePlusTF3, roundId, 3, dnf));
+                        timeList.add(getTime(dnf4, plus4, time4TF, timePlusTF4, roundId, 4, dnf));
+                        timeList.add(getTime(dnf5, plus5, time5TF, timePlusTF5, roundId, 5, dnf));
+                        
+                        double average = this.getAverage(timeList);
+                        double pb = this.getPb(timeList);
+                        
+                        round.setAvg(average);
+                        round.setPb(pb);
+                        
+                        rubik.update(round);
+                        
+                        this.alert("info", "Promedio: " + average);
+                        
+                        ((Node) event.getSource()).getScene().getWindow().hide();
+                        
+                    } else {
+                        
+                        this.alert("error", "Por favor, complete el plus faltante");
+                        
+                    }
                     
                 } else {
                     
-                    System.out.println("Faltan campos");
+                    this.alert("error", "Por favor, complete los campos faltantes");
                     
                 }
                 
             } else {
                 
-                System.out.println("Falta juez");
+                this.alert("error", "Por favor, establezca un juez para la ronda");
                 
             }
             
         } else {
             
-            System.out.println("Falta cuber");
+            this.alert("error", "Por favor, establezca un cuber para la ronda");
             
         }
         
     }
     
-    private Time getTime(RadioButton dnf, RadioButton plus, TextField timeValue, TextField timePlus, int roundId, int iteration, double dnfValue) {
+    private boolean validatePlus() {
         
-        Time _time = null;
+        TextField[] textFields = new TextField[] {
+            this.timePlusTF1,
+            this.timePlusTF2,
+            this.timePlusTF3,
+            this.timePlusTF4,
+            this.timePlusTF5
+        };
+        
+        RadioButton[] radioButtons = new RadioButton[] {
+            this.plus1,
+            this.plus2,
+            this.plus3,
+            this.plus4,
+            this.plus5
+        };
+        
+        for (int i = 0; i < radioButtons.length; i++) {
+            
+            RadioButton radioButton = radioButtons[i];
+            
+            if (radioButton.isSelected()) {
+                
+                TextField textField = textFields[i];
+                
+                if (textField.getText().isEmpty()) {
+                    
+                    return false;
+                    
+                }
+                
+            }
+            
+            
+        }
+        
+        
+        return true;
+    }
+    
+    private Time getTime(RadioButton dnf, RadioButton plus, TextField timeValue,
+            TextField timePlus, int roundId, int iteration, double dnfValue) {
+        
+        Time _time;
         
         if (dnf.isSelected()) {
                         
@@ -216,12 +308,14 @@ public class RoundController implements Initializable {
 
         }
         
-        this.rubik.save(_time);
+        System.out.println(_time.toString());
+        
+        rubik.save(_time);
         
         return _time;
     }
     
-    public double generarAVG(List<Time> times){
+    public double getAverage(List<Time> times){
       
         double best = 10000;
         double worst = -100000;
@@ -316,10 +410,7 @@ public class RoundController implements Initializable {
                                 
                                 if (rubik.verify(sample, template)) {
                                     
-                                    new Alert(
-                                            AlertType.INFORMATION, 
-                                            "Cuber encontrado: " + cuber.toString()
-                                    ).show();
+                                    this.alert("info", "Cuber encontrado: " + cuber.toString());
                                     
                                     this.cuberLabel.setText(cuber.getName());
                                     
@@ -330,21 +421,9 @@ public class RoundController implements Initializable {
                                     
                                     this.alert.close();
                                     
-                                    return;
-                                    
-                                } else {
-                                    
-                                    new Alert(
-                                            AlertType.INFORMATION, 
-                                            "Cuber no encontrado :/"
-                                    ).show();
-                                    
-                                    readerEvent.setIsRunning(false);
-                                    readerThread.interrupt();
-                                    
-                                    this.alert.close();
-                                    
                                     found = true;
+                                    
+                                    break;
                                     
                                 }
                                 
@@ -354,10 +433,7 @@ public class RoundController implements Initializable {
                         
                         if (!found) {
                             
-                            new Alert(
-                                    AlertType.INFORMATION,
-                                    "Juez no encontrado :/"
-                            ).show();
+                            this.alert("error", "Cuber no encontrado :/");
                             
                             readerEvent.setIsRunning(false);
                             readerThread.interrupt();
@@ -382,10 +458,7 @@ public class RoundController implements Initializable {
                                     
                                     if (rubik.verify(sample, template)) {
                                         
-                                        new Alert(
-                                                AlertType.INFORMATION, 
-                                                "Juez encontrado: " + judge.toString()
-                                        ).show();
+                                        this.alert("info", "Juez encontrado: " + judge.toString());
                                         
                                         this.judgeLabel.setText(judge.getName());
                                         
@@ -398,6 +471,8 @@ public class RoundController implements Initializable {
                                     
                                         found = true;
                                         
+                                        break;
+                                        
                                     }
                                     
                                 }
@@ -406,11 +481,8 @@ public class RoundController implements Initializable {
                             
                             if (!found) {
                                 
-                                new Alert(
-                                        AlertType.INFORMATION,
-                                        "Juez no encontrado :/"
-                                ).show();
-
+                                this.alert("error", "Juez no encontrado :/");
+                                
                                 readerEvent.setIsRunning(false);
                                 readerThread.interrupt();
 
@@ -432,10 +504,25 @@ public class RoundController implements Initializable {
             
             ex.printStackTrace();
             
-            new Alert(
-                    Alert.AlertType.ERROR,
-                    "Error " + ex.toString()
-            ).show();
+            this.alert("error", ex.toString());
+            
+        }
+        
+    }
+    
+    public void alert(String type, String message) {
+        
+        if (type.equalsIgnoreCase("error")) {
+            
+            new Alert(AlertType.ERROR, message).show();
+            
+        } else {
+            
+            if (type.equalsIgnoreCase("info")) {
+                
+                new Alert(AlertType.INFORMATION, message).show();
+                
+            }
             
         }
         

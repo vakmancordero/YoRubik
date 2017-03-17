@@ -44,15 +44,18 @@ Contributor(s):
     <property name="hibernate.hbm2ddl.auto">update</property>
     <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
     <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-    <property name="hibernate.connection.url">jdbc:mysql://69.162.76.106:3306/tributal_yorubik</property>
+    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/tributal_yorubik</property>
+    <property name="hibernate.connection.username">vaksfk</property>
+    <property name="hibernate.connection.password">jaqart_</property>
+    
+<!--    <property name="hibernate.connection.url">jdbc:mysql://69.162.76.106:3306/tributal_yorubik</property>
     <property name="hibernate.connection.username">tributal_candle</property>
-    <property name="hibernate.connection.password">pass_candle_123</property>
-    <mapping class="yorubik.model.Cuber"/>
+    <property name="hibernate.connection.password">pass_candle_123</property>-->
+    
     <mapping resource="yorubik/model/Judge.hbm.xml"/>
     <mapping resource="yorubik/model/Cuber.hbm.xml"/>
     <mapping resource="yorubik/model/Tournament.hbm.xml"/>
     <mapping resource="yorubik/model/Category.hbm.xml"/>
-    <!--<mapping resource="yorubik/model/Time.hbm.xml"/>-->
     <mapping resource="yorubik/model/Round.hbm.xml"/>
     <mapping resource="yorubik/model/Time.hbm.xml"/>
   </session-factory>

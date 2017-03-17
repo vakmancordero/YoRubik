@@ -14,9 +14,7 @@ public class YoRubik extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-//        Parent root = FXMLLoader.load(getClass().getResource("/yorubik/times/round/RoundFXML.fxml"));
-//        Parent root = FXMLLoader.load(getClass().getResource("/yorubik/judge/JudgeFXML.fxml"));
-        Parent root = FXMLLoader.load(getClass().getResource("/yorubik/times/selecttournament/SelectTournamentFXML.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("YoRubikFXML.fxml"));
         
         Scene scene = new Scene(root);
         

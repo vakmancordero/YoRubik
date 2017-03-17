@@ -1,4 +1,4 @@
-package yorubik.judge;
+package yorubik.cuber;
 
 import com.digitalpersona.onetouch.DPFPDataPurpose;
 import com.digitalpersona.onetouch.DPFPFeatureSet;
@@ -11,16 +11,19 @@ import com.digitalpersona.onetouch.processing.DPFPImageQualityException;
 import java.net.URL;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.TextField;
+
+import java.util.Optional;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
-import yorubik.model.Judge;
+import yorubik.model.Cuber;
 import yorubik.reader.DPFPReader;
+
 import yorubik.util.Rubik;
 import yorubik.util.ValidatorUtil;
 
@@ -30,7 +33,7 @@ import static yorubik.YoRubikController.rubik;
  *
  * @author VakSF
  */
-public class JudgeController implements Initializable {
+public class CuberController implements Initializable {
     
     private DPFPReader myReader;
     
@@ -44,7 +47,6 @@ public class JudgeController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
         this.myReader = new DPFPReader();
         
         try {
@@ -66,7 +68,7 @@ public class JudgeController implements Initializable {
     }
     
     private void initValidator() {
-        this.validatorUtil = new ValidatorUtil(this.nameTF, this.datePicker);
+        this.validatorUtil = new ValidatorUtil(this.nameTF, datePicker);
     }
             
     @FXML
@@ -80,23 +82,23 @@ public class JudgeController implements Initializable {
                     this.datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()
             );
             
-            Judge judge = new Judge();
-            judge.setName(name);
-            judge.setBornDate(birthday);
+            Cuber cuber = new Cuber();
+            cuber.setName(name);
+            cuber.setBirthday(birthday);
             
-            Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+            Alert confirmation = new Alert(AlertType.CONFIRMATION);
             
             confirmation.setTitle("Confirmacion de modificación");
             confirmation.setHeaderText("Está seguro?");
             confirmation.setContentText(
-                    "Desea establecer la huella del juez " + judge.getName() + "?"
+                    "Desea establecer la huella del cuber " + cuber.getName() + "?"
             );
             
             Optional<ButtonType> option = confirmation.showAndWait();
             
             if (option.get() == ButtonType.OK) {
                 
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Captura");
                 alert.setHeaderText("Captura de datos");
                 
@@ -145,32 +147,21 @@ public class JudgeController implements Initializable {
                     
                     DPFPTemplate template = enrollment.getTemplate();
                     
-                    judge.setDigit(rubik.serializeTemplate(template));
+                    cuber.setTemplate(rubik.serializeTemplate(template));
                     
-                    try {
-                        
-                        rubik.saveFingerPrint(judge);
-                        
-                        new Alert(
-                                Alert.AlertType.INFORMATION,
-                                "La huella ha sido registrada correctamente"
-                        ).show();
-                        
-                    } catch (Exception ex) {
-                        
-                        new Alert(
-                                Alert.AlertType.ERROR,
-                                "No hay internet :("
-                        ).show();
-                        
-                    }
+                    rubik.saveFingerPrint(cuber);
+                    
+                    new Alert(
+                            AlertType.INFORMATION,
+                            "La huella ha sido registrada correctamente"
+                    ).show();
                     
                     this.validatorUtil.clearFields();
                     
                 } else {
                     
                     new Alert(
-                            Alert.AlertType.ERROR,
+                            AlertType.ERROR,
                             "No hay lector conectado"
                     ).show();
                     

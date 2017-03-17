@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -18,28 +19,43 @@ import yorubik.model.Tournament;
 import yorubik.times.round.RoundController;
 import yorubik.util.Rubik;
 
+import static yorubik.YoRubikController.rubik;
+
 /**
  *
  * @author VakSF
  */
-public class TimeController implements Initializable {
+public class CategoryController implements Initializable {
     
     @FXML
     private ComboBox<Category> categoryCB;
     
     private Tournament tournament;
     
-    private Rubik rubik;
-    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        this.rubik = new Rubik();
+        
+        try {
+            
+            if (rubik == null) {
+                rubik = new Rubik();
+            }
+            
+        } catch (Exception ex) {
+            
+            new Alert(
+                    Alert.AlertType.ERROR,
+                    "No hay internet :("
+            ).show();
+            
+        }
+        
         this.initCB();
     }
     
     private void initCB() {
         
-        List<Category> categories = this.rubik.getList(Category.class);
+        List<Category> categories = rubik.getList(Category.class);
         this.categoryCB.getItems().addAll(categories);
         
         if (!categories.isEmpty()) {
@@ -58,25 +74,22 @@ public class TimeController implements Initializable {
         Stage stage = new Stage();
         stage.setScene(new Scene((Pane) loader.load()));
         
-        RoundController controller = 
-                loader.<RoundController>getController();
-        
+        RoundController controller =loader.<RoundController>getController();
         controller.setData(this.tournament, this.categoryCB.getValue());
         
         stage.setTitle("Round");
-
         stage.show();
         
         this.close(event);
         
     }
     
-    private void close(ActionEvent event) {
-        ((Node) event.getSource()).getScene().getWindow().hide();
-    }
-    
     public void setTournament(Tournament tournament) {
         this.tournament = tournament;
+    }
+    
+    private void close(ActionEvent event) {
+        ((Node) event.getSource()).getScene().getWindow().hide();
     }
     
 }

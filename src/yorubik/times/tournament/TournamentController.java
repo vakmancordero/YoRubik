@@ -1,4 +1,4 @@
-package yorubik.times.selecttournament;
+package yorubik.times.tournament;
 
 import java.io.IOException;
 import java.net.URL;
@@ -10,33 +10,49 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import yorubik.model.Tournament;
-import yorubik.times.TimeController;
+import yorubik.times.CategoryController;
 import yorubik.util.Rubik;
+
+import static yorubik.YoRubikController.rubik;
 
 /**
  *
  * @author VakSF
  */
-public class SelectTournamentController implements Initializable {
+public class TournamentController implements Initializable {
     
     @FXML
     private ComboBox<Tournament> tournamentCB;
     
-    private Rubik rubik;
-    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        this.rubik = new Rubik();
+        
+        try {
+            
+            if (rubik == null) {
+                rubik = new Rubik();
+            }
+            
+        } catch (Exception ex) {
+            
+            new Alert(
+                    Alert.AlertType.ERROR,
+                    "No hay internet :("
+            ).show();
+            
+        }
+        
         this.initCB();
     }
     
     private void initCB() {
         
-        List<Tournament> tournaments = this.rubik.getList(Tournament.class);
+        List<Tournament> tournaments = rubik.getList(Tournament.class);
         this.tournamentCB.getItems().addAll(tournaments);
         
         if (!tournaments.isEmpty()) {
@@ -49,19 +65,16 @@ public class SelectTournamentController implements Initializable {
     private void next(ActionEvent event) throws IOException {
         
         FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                "/yorubik/times/TimeFXML.fxml"
+                "/yorubik/times/CategoryFXML.fxml"
         ));
 
         Stage stage = new Stage();
         stage.setScene(new Scene((Pane) loader.load()));
         
-        TimeController controller = 
-                loader.<TimeController>getController();
-        
+        CategoryController controller = loader.<CategoryController>getController();
         controller.setTournament(this.tournamentCB.getValue());
         
-        stage.setTitle("Establecer compañía");
-
+        stage.setTitle("Establecer categoría");
         stage.show();
         
         this.close(event);
@@ -69,9 +82,6 @@ public class SelectTournamentController implements Initializable {
     }
     
     private void close(ActionEvent event) {
-        
-        System.out.println("Here");
-        
         ((Node) event.getSource()).getScene().getWindow().hide();
     }
     

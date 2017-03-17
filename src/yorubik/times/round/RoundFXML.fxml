@@ -8,7 +8,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="533.0" prefWidth="591.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="yorubik.times.round.RoundController">
+<AnchorPane id="AnchorPane" prefHeight="587.0" prefWidth="591.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="yorubik.times.round.RoundController">
    <children>
       <ScrollPane fitToWidth="true" layoutX="71.0" layoutY="38.0" prefHeight="474.0" prefWidth="430.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
          <content>
@@ -18,24 +18,30 @@
                      <children>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                            <children>
-                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                              <HBox alignment="CENTER" prefHeight="26.0" prefWidth="218.0" spacing="10.0">
                                  <children>
                                     <Label text="Torneo:" textFill="#686868">
                                        <font>
-                                          <Font name="System Bold" size="12.0" />
+                                          <Font name="System Bold" size="17.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="tournamentLabel" text="TournamentName" />
+                                    <Label fx:id="tournamentLabel" text="TournamentName" textFill="#1363b9">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font></Label>
                                  </children>
                               </HBox>
-                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                              <HBox alignment="CENTER" prefHeight="26.0" prefWidth="222.0" spacing="10.0">
                                  <children>
                                     <Label text="Caterogía:" textFill="#686868">
                                        <font>
-                                          <Font name="System Bold" size="12.0" />
+                                          <Font name="System Bold" size="17.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="categoryLabel" text="CategoryName" />
+                                    <Label fx:id="categoryLabel" text="CategoryName" textFill="#bc5b5b">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font></Label>
                                  </children>
                               </HBox>
                            </children>
@@ -70,6 +76,24 @@
                            </children>
                         </HBox>
                         <Button mnemonicParsing="false" onAction="#setJudge" prefHeight="25.0" prefWidth="124.0" text="Establecer" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="42.0" prefWidth="171.0">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <Label text="DNF:" textFill="#686868">
+                                 <font>
+                                    <Font name="System Bold" size="17.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="dnfLabel" text="240.00" textFill="#bc5b5b">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                   <VBox prefHeight="42.0" prefWidth="171.0">
