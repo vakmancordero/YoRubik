@@ -9,7 +9,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="429.0" prefWidth="571.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="yorubik.YoRubikController">
+<AnchorPane id="AnchorPane" prefHeight="464.0" prefWidth="571.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="yorubik.YoRubikController">
    <children>
       <MenuBar layoutX="158.0" layoutY="108.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
@@ -32,7 +32,7 @@
           </Menu>
         </menus>
       </MenuBar>
-      <GridPane alignment="CENTER" layoutX="123.0" layoutY="155.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="45.0">
+      <GridPane alignment="CENTER" layoutX="123.0" layoutY="155.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="95.0">
         <columnConstraints>
           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -42,27 +42,32 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <JFXButton onAction="#openJudge" prefHeight="160.0" prefWidth="252.0" ripplerFill="#324e7f" style="-fx-background-color: #FCFCFF;" text="Registrar Judge" textFill="#656565">
+            <JFXButton onAction="#openJudge" prefHeight="160.0" prefWidth="252.0" ripplerFill="#c3c3c3" style="-fx-background-color: #656565;" text="Registrar Judge" textFill="#eaeaea">
                <font>
-                  <Font name="System Bold" size="22.0" />
+                  <Font name="System Bold" size="24.0" />
                </font>
             </JFXButton>
-            <JFXButton onAction="#openTournament" prefHeight="160.0" prefWidth="252.0" ripplerFill="#324e7f" style="-fx-background-color: #FCFCFF;" text="Añadir una ronda" textFill="#656565" GridPane.rowIndex="1">
+            <JFXButton onAction="#openTournament" prefHeight="160.0" prefWidth="252.0" ripplerFill="WHITE" style="-fx-background-color: #d3c124;" text="Añadir una ronda" textFill="#eaeaea" GridPane.rowIndex="1">
                <font>
-                  <Font name="System Bold" size="22.0" />
+                  <Font name="System Bold" size="24.0" />
                </font>
             </JFXButton>
-            <JFXButton onAction="#openCuber" prefHeight="160.0" prefWidth="252.0" ripplerFill="#324e7f" style="-fx-background-color: #FCFCFF;" text="Registrar Cuber" textFill="#656565" GridPane.columnIndex="1">
+            <JFXButton onAction="#openCuber" prefHeight="160.0" prefWidth="252.0" ripplerFill="#c3c3c3" style="-fx-background-color: #1a3c6d;" text="Registrar Cuber" textFill="#eaeaea" GridPane.columnIndex="1">
                <font>
-                  <Font name="System Bold" size="22.0" />
+                  <Font name="System Bold" size="24.0" />
                </font>
             </JFXButton>
-            <JFXButton prefHeight="160.0" prefWidth="252.0" ripplerFill="#324e7f" style="-fx-background-color: #FCFCFF;" text="Option 1" textFill="#656565" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <JFXButton prefHeight="160.0" prefWidth="252.0" ripplerFill="#d3c124" style="-fx-background-color: #FCFCFF;" text="Option 1" textFill="#1a3c6d" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <font>
                   <Font name="System Bold" size="22.0" />
                </font>
             </JFXButton>
          </children>
       </GridPane>
+      <Label alignment="CENTER" layoutX="272.0" layoutY="51.0" text="Dashboard" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0">
+         <font>
+            <Font name="Freestyle Script" size="65.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
